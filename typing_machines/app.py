@@ -1,52 +1,67 @@
-from sys import argv, stderr
+from enum import Enum
+from os import remove
+from subprocess import Popen
+from time import sleep
+from typing import Union, List
+
+from typing_machines.abstract_machines.turing_machine import TuringMachine
 from typing_machines.compilers.compiler_g import compile_g, compile_query_g
 from typing_machines.compilers.compiler_r import compile_r, compile_query_r
-from typing_machines.examples.machines import all_machines
+from typing_machines.examples.machines import palindromes
 
 
-def _help() -> None:
-	print("Usage:", file=stderr)
-	print("\tpython app.py [G,R] -m <machine_name>", file=stderr)
-	print("\tpython app.py [G,R] -q <input word>", file=stderr)
-	print("Example:", file=stderr)
-	print("\tpython app.py R -m anbn > experiment.py", file=stderr)
-	print("\tpython app.py R -q aaabbb >> experiment.py", file=stderr)
-	print("\tmypy experiment.py", file=stderr)
-	print("\t> Success: no issues found in 1 source file", file=stderr)
-	print("\tsed -i '$ d' experiment.py  # delete previous query", file=stderr)
-	print("\tpython app.py R -q aababb >> experiment.py", file=stderr)
-	print("\tmypy experiment.py", file=stderr)
-	print("\t> error: Incompatible types in assignment [...]", file=stderr)
+class Algorithm(Enum):
+    """
+    Supported encoding algorithms by author name.
+    """
+    Grigore = 1
+    Roth = 2
 
 
-def main() -> None:
-	"""
-	The main application.
-	See `_help()` for details.
-	"""
-	if len(argv) not in [3, 4] or argv[1] not in ["G", "R"]:
-		_help()
-		return
-	if argv[2] == "-m":
-		machine_name: str = argv[3]
-		if machine_name not in all_machines:
-			print(f"No machine \"{machine_name}\". Available machines:")
-			print(", ".join(all_machines.keys()))
-			return
-		if argv[1] == "G":
-			print(compile_g(all_machines[machine_name]))
-		else:
-			print(compile_r(all_machines[machine_name]))
-		return
-	elif argv[2] == "-q":
-		input_word: str = argv[3] if len(argv) == 4 else ""
-		if argv[1] == "G":
-			print(compile_query_g(input_word))
-		else:
-			print(compile_query_r(input_word))
-		return
-	_help()
+def encode_machine(algorithm: Algorithm, machine: TuringMachine) -> str:
+    """
+    Encode a Turing machine as a Python class table with given algorithm.
+    """
+    if algorithm == Algorithm.Grigore:
+        return compile_g(machine)
+    elif algorithm == Algorithm.Roth:
+        return compile_r(machine)
+    else:
+        raise Exception(f"unrecognized algorithm {algorithm}")
 
 
-if __name__ == "__main__":
-	main()
+def encode_query(algorithm: Algorithm, machine: TuringMachine, input_word: Union[str, List[str]]) -> str:
+    """
+    Encode an input word as a Python subtyping query with given algorithm.
+    """
+    if algorithm == Algorithm.Grigore:
+        return compile_query_g(input_word, machine)
+    elif algorithm == Algorithm.Roth:
+        return compile_query_r(input_word, machine)
+    else:
+        raise Exception(f"unrecognized algorithm {algorithm}")
+
+
+def encode(algorithm: Algorithm, machine: TuringMachine, input_word: Union[str, List[str]]) -> str:
+    """
+    Encode a Turing machine and its input using Python typing hints with given algorithm.
+    """
+    return encode_machine(algorithm, machine) + "\n" + encode_query(algorithm, machine, input_word)
+
+
+if __name__ == '__main__':
+    print("Is 'abbabba' a palindrome?")
+    with open("example.py", "w") as python_file:
+        python_file.write(encode(Algorithm.Grigore, palindromes, "abbabba"))
+    sleep(1)
+    with Popen(["mypy", "example.py"]) as p:
+        retcode = p.wait(timeout=10)
+    assert retcode == 0  # abbabba is a palindrome
+    print("Is 'abbbaba' a palindrome?")
+    with open("example.py", "w") as python_file:
+        python_file.write(encode(Algorithm.Grigore, palindromes, "abbbaba"))
+    sleep(1)
+    with Popen(["mypy", "example.py"]) as p:
+        retcode = p.wait(timeout=10)
+    assert retcode != 0  # abbbaba is not a palindrome
+    remove("example.py")
