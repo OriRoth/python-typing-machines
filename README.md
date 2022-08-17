@@ -18,7 +18,6 @@ Here is one possible script (also found in `typing_machines/app.py`):
 
 ```python
 from typing_machines.app import *  # import application
-
 with open("example.py", "w") as python_file:  # write palindromes machine and input "abbabba"
     python_file.write(encode(Algorithm.Grigore, palindromes, "abbabba"))
 sleep(1)  # wait for write operation
@@ -45,16 +44,9 @@ makes `mypy` throw a segmentation fault:
 
 ```python
 from typing import TypeVar, Generic
-
 T = TypeVar("T", contravariant=True)
-
-
 class N(Generic[T]): ...
-
-
 class C(N[N["C"]]): ...
-
-
 _: N[C] = C()
 ```
 
@@ -64,5 +56,5 @@ certain programs is unavoidable.
 ## What's new?
 
 We introduce an alternative construction that is supposed to compile much faster for large inputs. You can try the new
-construction by typing `R` instead of
-`G` in the first argument to `app.py`.
+construction by using `Algorithm.Roth` instead of
+`Algorithm.Grigore` in the script above.
