@@ -1,5 +1,7 @@
 # Python Type Hints are Turing Complete
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7004898.svg)](https://doi.org/10.5281/zenodo.7004898)
+
 We present a reduction from Turing machines to Python type hints. The Turing machine accepts its input if and only if
 the Python program is correctly typed.
 
