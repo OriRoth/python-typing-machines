@@ -1,4 +1,4 @@
-# Python Type Hints are Turing Complete
+# Python Type Hints Are Turing Complete
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7004898.svg)](https://doi.org/10.5281/zenodo.7004898)
 
