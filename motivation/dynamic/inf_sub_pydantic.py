@@ -11,6 +11,5 @@ from pydantic.generics import GenericModel
 Z = TypeVar("Z", contravariant=True)
 class N(GenericModel, Generic[Z]): ...
 class C(N[N["C"]]): ...
-class A(BaseModel):
-	x: N[C]
+class A(BaseModel): x: N[C]
 A(x=C())

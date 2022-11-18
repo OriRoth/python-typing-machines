@@ -7,12 +7,11 @@
 
 from typing import TypeVar, Generic, Any
 import typic
-Z = TypeVar ("Z", contravariant=True)
+Z = TypeVar("Z", contravariant=True)
 class N(Generic[Z]): ...
 X = TypeVar("X")
 class C(Generic[X], N[N["C[C[X]]"]]): ...
 _: N[C[Any]] = C[Any]()
-
 @typic.al
 def f(x: N[C[Any]]): ...
-#f(C())
+f(C())
