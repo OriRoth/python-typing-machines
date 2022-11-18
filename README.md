@@ -40,9 +40,7 @@ file.
 ## Wait, so `mypy` can get into an infinite loop?
 
 Kind of. As with many other compilers, the subtyping algorithm implemented in `mypy` is recursive, so, recursion +
-infinite loop = *stack overflow*. In fact, even this simple program (also found
-in `typing_machines/motivation/mypy_u_ok.py`)
-makes `mypy` throw a segmentation fault:
+infinite loop = *stack overflow*. In fact, even this simple program makes `mypy` throw a segmentation fault:
 
 ```python
 from typing import TypeVar, Generic
