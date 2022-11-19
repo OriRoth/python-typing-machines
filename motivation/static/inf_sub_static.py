@@ -24,7 +24,7 @@
 # Reason: from looking at the source, variance is probably not supported
 
 from typing import TypeVar, Generic, Any
-Z = TypeVar ("Z", contravariant=True)
+Z = TypeVar("Z", contravariant=True)
 class N(Generic[Z]): ...
 X = TypeVar("X")
 class C(Generic[X], N[N["C[C[X]]"]]): ...
