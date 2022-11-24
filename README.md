@@ -58,3 +58,29 @@ certain programs is unavoidable.
 We introduce an alternative construction that is supposed to compile much faster for large inputs. You can try the new
 construction by using `Algorithm.Roth` instead of
 `Algorithm.Grigore` in the script above.
+
+## Is My Type Checker in Danger?
+
+We simulate Turing machines and infinite loops at the type level using contravariant type parameters. Thus, your type
+checker can get into an infinite loop using our methods only if it supports variance as described in PEP 484.
+
+| Type Checker      | Discipline | Supports Variance?       |
+|-------------------|------------|--------------------------|
+| Mypy 0.991        | static     | <center>&#9679;</center> |
+| Pyre 0.9.17       | static     | <center>&#9679;</center> |
+| Pyright 1.1.279   | static     | <center>&#9680;</center> |
+| Pytype 2022.11.10 | static     | <center>&#9675;</center> |
+| Pyanalyze 0.8.0   | static     | <center>&#9675;</center> |
+| Pydantic 1.10.2   | dynamic    | <center>&#9675;</center> |
+| Pytypes 1.0b10    | dynamic    | <center>&#9675;</center> |
+| Typeguard 2.13.3  | dynamic    | <center>&#9675;</center> |
+| Typical 2.8.0     | dynamic    | <center>&#9675;</center> |
+
+The programs used to obtain these results are found in `motivation/static` and
+`motivation/dynamic`.
+
+Note that Pyright is *unsound*, which means that it reports errors for
+correctly-typed programs, so its variance support is only partial.
+For example, the code in `motivation/static/pyright_unsound.py` is correctly
+typed, Mypy and Pyre report no error when checking the file, but Pyright does
+report an error.
