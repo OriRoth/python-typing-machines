@@ -1,4 +1,4 @@
-# Python Type Hints Are Turing Complete
+# Python Type Hints are Turing Complete
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7004898.svg)](https://doi.org/10.5281/zenodo.7004898)
 
@@ -59,7 +59,7 @@ We introduce an alternative construction that is supposed to compile much faster
 construction by using `Algorithm.Roth` instead of
 `Algorithm.Grigore` in the script above.
 
-## Is My Type Checker in Danger?
+## Is my type checker in danger?
 
 We simulate Turing machines and infinite loops at the type level using contravariant type parameters. Thus, your type
 checker can get into an infinite loop using our methods only if it supports variance as described in PEP 484.
