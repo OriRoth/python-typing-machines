@@ -69,8 +69,8 @@ def compile_r(turing_machine: TuringMachine) -> str:
     supers_hl = []
     supers_hr = []
     for letter in turing_machine.alphabet + [TAPE_END]:
-        supers_hl.append(_render_type(f"L_{letter}", "N", "Any"))
-        supers_hr.append(_render_type(f"L_{letter}", "N", "Any"))
+        supers_hl.append(_render_type(f"L_{letter}", "Any"))
+        supers_hr.append(_render_type(f"L_{letter}", "Any"))
     super_clause: str = "" if len(supers_hl) == 0 else ", " + ", ".join(supers_hl)
     typing_machine += f"class QL_{turing_machine.termination_state}(Generic[T]{super_clause}): ...\n"
     super_clause = "" if len(supers_hr) == 0 else ", " + ", ".join(supers_hr)
